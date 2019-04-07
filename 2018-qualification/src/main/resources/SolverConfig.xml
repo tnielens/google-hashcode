@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<solver>
+    <!-- Domain model configuration -->
+    <scanAnnotatedClasses/>
+    <!--<environmentMode>FULL_ASSERT</environmentMode>-->
+
+    <!-- Score configuration -->
+    <scoreDirectorFactory>
+        <scoreDrl>score/rules.drl</scoreDrl>
+        <initializingScoreTrend>ONLY_DOWN/ONLY_DOWN</initializingScoreTrend>
+    </scoreDirectorFactory>
+
+    <!--<scoreDirectorFactory>-->
+    <!--<easyScoreCalculatorClass>score.ScoreCalculator</easyScoreCalculatorClass>-->
+    <!--</scoreDirectorFactory>-->
+
+    <termination>
+        <!--<minutesSpentLimit>2</minutesSpentLimit>-->
+        <secondsSpentLimit>60</secondsSpentLimit>
+    </termination>
+
+    <constructionHeuristic>
+        <queuedEntityPlacer>
+            <entitySelector id="placerEntitySelector">
+                <cacheType>PHASE</cacheType>
+                <selectionOrder>SORTED</selectionOrder>
+                <sorterManner>DECREASING_DIFFICULTY</sorterManner>
+            </entitySelector>
+            <unionMoveSelector>
+                <changeMoveSelector>
+                    <entitySelector mimicSelectorRef="placerEntitySelector"/>
+                    <valueSelector variableName="previousRideCarAvailability">
+                        <filterClass>filters.NotInDummyCar</filterClass>
+                        <selectionOrder>RANDOM</selectionOrder>
+                        <selectedCountLimit>10</selectedCountLimit>
+                    </valueSelector>
+                </changeMoveSelector>
+                <changeMoveSelector>
+                    <entitySelector mimicSelectorRef="placerEntitySelector"/>
+                    <valueSelector variableName="previousRideCarAvailability">
+                        <cacheType>STEP</cacheType>
+                        <filterClass>filters.Cars</filterClass>
+                        <selectionOrder>SHUFFLED</selectionOrder>
+                        <selectedCountLimit>20</selectedCountLimit>
+                    </valueSelector>
+                </changeMoveSelector>
+                <changeMoveSelector>
+                    <entitySelector mimicSelectorRef="placerEntitySelector"/>
+                    <valueSelector variableName="previousRideCarAvailability">
+                        <cacheType>PHASE</cacheType>
+                        <filterClass>filters.DummyCar</filterClass>
+                        <selectedCountLimit>1</selectedCountLimit>
+                    </valueSelector>
+                </changeMoveSelector>
+                    </unionMoveSelector>
+        </queuedEntityPlacer>
+        <forager>
+            <pickEarlyType>FIRST_NON_DETERIORATING_SCORE</pickEarlyType>
+        </forager>
+    </constructionHeuristic>
+    <localSearch>
+        <unionMoveSelector>
+            <changeMoveSelector>
+                <entitySelector id="rideSelector">
+                    <cacheType>STEP</cacheType>
+                    <selectedCountLimit>10</selectedCountLimit>
+                    <filterClass>filters.LocalSearchEntitySelector</filterClass>
+                </entitySelector>
+                <valueSelector variableName="previousRideCarAvailability">
+                    <cacheType>STEP</cacheType>
+                    <filterClass>filters.LocalSearchValueSelector</filterClass>
+                    <selectedCountLimit>100</selectedCountLimit>
+                </valueSelector>
+            </changeMoveSelector>
+            <!--<tailChainSwapMoveSelector/>-->
+        </unionMoveSelector>
+    </localSearch>
+
+</solver>
+

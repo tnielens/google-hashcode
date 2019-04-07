@@ -1,0 +1,20 @@
+<plannerBenchmark>
+    <benchmarkDirectory>local/data/bench</benchmarkDirectory>
+    <!--<parallelBenchmarkCount>AUTO</parallelBenchmarkCount>-->
+    <warmUpSecondsSpentLimit>30</warmUpSecondsSpentLimit>
+    <inheritedSolverBenchmark>
+        <solver>
+            <scanAnnotatedClasses/>
+            <scoreDirectorFactory>
+                <easyScoreCalculatorClass>score.ScoreCalculator</easyScoreCalculatorClass>
+            </scoreDirectorFactory>
+            <termination>
+                <minutesSpentLimit>1</minutesSpentLimit>
+            </termination>
+        </solver>
+    </inheritedSolverBenchmark>
+    <solverBenchmarkBluePrint>
+        <solverBenchmarkBluePrintType>EVERY_CONSTRUCTION_HEURISTIC_TYPE_WITH_EVERY_LOCAL_SEARCH_TYPE</solverBenchmarkBluePrintType>
+    </solverBenchmarkBluePrint>
+    <parallelBenchmarkCount>AUTO</parallelBenchmarkCount>
+</plannerBenchmark>

@@ -1,0 +1,40 @@
+package score;
+    dialect "java"
+
+import org.optaplanner.core.api.score.buildin.hardsoftlong.HardSoftLongScoreHolder;
+
+import model.Ride;
+import model.RidePlan;
+import model.ProblemFacts;
+
+global HardSoftLongScoreHolder scoreHolder;
+
+// ############################################################################
+// Hard constraints
+// ############################################################################
+
+rule "arrivalTooLate"
+    when
+        Ride(car != null, car.id != -1, overrun > 0, $overrun: overrun)
+    then
+        scoreHolder.addHardConstraintMatch(kcontext, - $overrun);
+end
+
+// ############################################################################
+// Soft constraints
+// ############################################################################
+
+rule "rideDistance"
+    when
+        d: Ride(car == null || car != null && car.id == -1, $distance : distance)
+    then
+        scoreHolder.addSoftConstraintMatch(kcontext, -$distance);
+end
+
+rule "rideBonus"
+    when
+        ProblemFacts($bonus : bonus)
+        Ride(car == null || car != null && car.id == -1 || (car.id != -1 && pickUpTime != earliest))
+    then
+        scoreHolder.addSoftConstraintMatch(kcontext, -$bonus);
+end
